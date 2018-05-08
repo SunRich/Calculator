@@ -29,172 +29,137 @@
 
 <script>
 
-
   export default {
     data() {
       return {
-        a: '',
-        b: '',
+        value: '',
         message: '0',
         isactive: false,
         active: '',
-        cal: ''
-      }
+      };
     },
 
     methods: {
-      calc(a, b, type) {//加减乘除
-        /*let r,
-         da = this.decNum(a),
-         db = decNum(b),
-         dsum = da + db,
-         dmin = Math.min(da, db),
-         dmax = Math.max(da, db);
-       dsum += dmax - dmin;
-       dsum = Math.pow(10, dsum);
-       dmax = Math.pow(10, dmax);
-       a = this.int(a);
-       b = this.int(b);
-       if (da > db) {
-         b *= Math.pow(10, da - db);
-       } else {
-         a *= Math.pow(10, db - da);
-       }
-       switch (type) {
-         case "add":
-           r = (a + b) / dmax;
-           break;
-         case "subtract":
-           r = (a - b) / dmax;
-           break;
-         case "multiply":
-           r = (a * b) / dsum;
-           break;
-         case "divide":
-           r = a / b;
-           break;
-       }
-       return r;*/
-        a = parseInt(a);
-        b = parseInt(b);
-        let r = 0;
+      calc(a, b, type) {
+        let r,
+            da   = this.decNum(a),
+            db   = this.decNum(b),
+            dsum = da + db,
+            dmin = Math.min(da, db),
+            dmax = Math.max(da, db);
+        dsum += dmax - dmin;
+        dsum     = Math.pow(10, dsum);
+        dmax     = Math.pow(10, dmax);
+        a        = this.int(a);
+        b        = this.int(b);
+        if (da > db) {
+          b *= Math.pow(10, da - db);
+        } else {
+          a *= Math.pow(10, db - da);
+        }
         switch (type) {
-          case "add":
-            r = a + b;
+          case 'add':
+            r = (a + b) / dmax;
             break;
-          case "subtract":
-            r = a - b;
+          case 'subtract':
+            r = (a - b) / dmax;
             break;
-          case "multiply":
-            r = a * b;
+          case 'multiply':
+            r = (a * b) / dsum;
             break;
-          case "divide":
+          case 'divide':
             r = a / b;
             break;
         }
         return r;
       },
+      
       point() {
         if (this.message.includes('.')) {
-          return
+          return;
         }
-        this.message += '.'
+        this.message += '.';
       },
+      
       int(a) {
-        return parseInt(a.toString().replace(".", ""));
+        return parseInt(a.toString().replace('.', ''));
       },
+      
       decNum(a) {
         let r = 0;
-        a = a.toString();
-        if (a.indexOf(".") !== -1) r = a.split(".")[1].length;
+        a     = a.toString();
+        if (a.indexOf('.') !== -1) r = a.split('.')[1].length;
         return r;
       },
 
       input: function (num) {
-        console.log(num);
         if (this.isactive) {
           this.message = num;
-          this.b = this.message;
         } else {
           if (this.message === '0') {
             if (num === '0') {
-              return
+              return;
             } else {
               this.message = num;
             }
           } else {
             this.message += num;
           }
-          this.b = this.message;
         }
         this.isactive = false;
 
       },
+     
+
       operator: function (opt) {
-        console.log(this.a);
-        console.log(this.b);
-        console.log(this.active);
         if (!this.isactive) {
           if (this.active) {
-            this.message = this.calc(this.a, this.b, this.active);
-            this.b = '';
+            this.message = this.calc(this.value, this.message, this.active);
+            
           }
         }
-        this.active = opt;
-        this.a = this.message;
+        this.active   = opt;
+        this.value        = this.message;
         this.isactive = true;
-
+      },
+      inverse: function () {
+        if (this.message === 0) {
+          return false;
+        }
+        if (this.message[0] === '-') {
+          this.message = this.message.substr(1);
+        } else {
+          this.message = '-' + this.message;
+        }
+      },
+      percentage: function () {
+        this.message = (this.message / 100).toString();
       },
 
       clear: function () {
-        this.message = '0';
-        this.a = '';
-        this.b = '';
+        this.message  = '0';
+        this.value        = '';
         this.isactive = false;
-        this.active = '';
+        this.active   = '';
       },
 
-      percentage: function () {
-        this.equation = '';
-        this.message = (this.message / 100).toString();
-        this.value = this.message;
-      },
-
-
-      inverse: function () {
-        if (this.message === 0)
-          return false;
-        this.equation = '';
-        if (this.message[0] === '-')
-          this.message = this.message.substr(1);
-        else
-          this.message = '-' + this.message;
-        this.value = this.message;
-      },
       equal: function () {
         if (this.active) {
-          this.message = this.calc(this.a, this.b, this.active);
-          this.a = this.message;
-          this.b = '';
-          this.active='';
+         
+          this.message  = this.calc(this.value,   this.message, this.active);
+          this.value        = this.message;
+          this.active   = '';
           this.isactive = true;
-          return
-        } else {
-          return
         }
-
-      }
-    }
-
-    ,
+      },
+    },
     mounted() {
-
 
     },
     created() {
 
-    }
-  }
+    },
+  };
 </script>
 
 <style lang="scss" scoped>
@@ -213,7 +178,7 @@
         font-size: 45px;
         text-align: right;
         border: none;
-        color: #FFFFFF;
+        color: #fff;
         background-color: #1d1f20;
         border-radius: 0;
       }
@@ -247,7 +212,7 @@
           flex-grow: 2;
         }
       }
-
+      
     }
   }
 </style>
